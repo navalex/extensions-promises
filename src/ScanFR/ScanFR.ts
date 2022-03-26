@@ -3,15 +3,12 @@ import {
 	Manga,
 	Chapter,
 	ChapterDetails,
-	HomeSection,
 	SearchRequest,
-	TagSection,
-	MangaUpdates,
 	PagedResults,
 	SourceInfo,
 	TagType }
 from "paperback-extensions-common"
-import { generateSearch, parseChapterDetails, parseChapters, parseHomeSections, parseMangaDetails, parseSearch, parseTags, parseUpdatedManga,  parseViewMore,  UpdatedManga } from "./ScanFRParser"
+import { generateSearch, parseChapterDetails, parseChapters, parseMangaDetails, parseSearch } from "./ScanFRParser"
 
 const SFR_DOMAIN = 'https://scan-fr.cc/'
 const method = 'GET'
@@ -78,18 +75,15 @@ export class ScanFR extends Source {
 	}
 
 	async searchRequest(query: SearchRequest, metadata: any): Promise<PagedResults> {
-		let page : number = metadata?.page ?? 1
 		const search = generateSearch(query)
 		const request = createRequestObject({
-			url: `${SFR_DOMAIN}/search?${search}&page=${page}`,
+			url: `${SFR_DOMAIN}/search?${search}`,
 			method,
 			cookies: this.cookies,
 		})
 
 		const response = await this.requestManager.schedule(request, 1)
-		const $ = this.cheerio.load(response.data)
-		const manga = parseSearch($)
-		metadata = manga.length > 0 ? { page: page + 1 } : undefined
+		const manga = parseSearch(JSON.parse(response.data))
 
 		return createPagedResults({
 			results: manga,
