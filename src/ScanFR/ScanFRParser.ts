@@ -4,74 +4,49 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
     const tagSections: TagSection[] = [createTagSection({ id: '0', label: 'genres', tags: [] }),
     createTagSection({ id: '1', label: 'format', tags: [] })]
 
-    const image: string = $('img', '.manga').attr('src') ?? ""
-    const rating: string = $('i', '#rating').text()
-    const tableBody = $('tbody', '.manga')
+    const image: string = $('img', '.img-responsive').attr('src') ?? ""
+    const rating: string = $('div', '#item-rating').data('score')
     const titles: string[] = []
-    const title = $('.manga').find('a').first().text()
-    titles.push(title.substring(0, title.lastIndexOf(' ')))
+    const title = $('.widget-title').first().text().replace('Manga ', '')
+    titles.push(title)
 
-    let hentai = false
     let author = ""
     let artist = ""
     let views = 0
     let status = MangaStatus.ONGOING
-    for (const row of $('tr', tableBody).toArray()) {
-        const elem = $('th', row).html()
-        switch (elem) {
-            case 'Author(s)': author = $('a', row).text(); break
-            case 'Artist(s)': artist = $('a', row).first().text(); break
-            case 'Popularity': {
-                let pop = (/has (\d*(\.?\d*\w)?)/g.exec($('td', row).text()) ?? [])[1]
-                if (pop.includes('k')) {
-                    pop = pop.replace('k', '')
-                    views = Number(pop) * 1000
-                }
-                else {
-                    views = Number(pop) ?? 0
-                }
-                break
-            }
-            case 'Alternative': {
-                const alts = $('td', row).text().split('  ')
+    for (const row of $('dl.dl-horizontal dt').toArray()) {
+        const elem = $(row)
+        switch (elem.text()) {
+            case 'Auteur(s)': author = elem.next().find('a').text(); break
+            case 'Vues': author = elem.next().text(); break
+            case 'Autres noms': {
+                const alts = elem.next().text().split(',')
                 for (const alt of alts) {
-                    const trim = alt.trim().replace(/(;*\t*)/g, '')
-                    if (trim != '')
-                        titles.push(trim)
+                    titles.push(alt)
                 }
                 break
             }
-            case 'Genre(s)': {
-                for (const genre of $('a', row).toArray()) {
-                    const item = $(genre).html() ?? ""
+            case 'Catégories': {
+                for (const genre of elem.next().find('a').toArray()) {
+                    const item = $(genre) ?? ""
                     const id = $(genre).attr('href')?.split('/').pop() ?? ''
-                    const tag = item.replace(/<[a-zA-Z\/][^>]*>/g, "")
-                    if (item.includes('Hentai')) hentai = true
+                    const tag = item.text()
                     tagSections[0].tags.push(createTag({ id: id, label: tag }))
                 }
                 break
             }
-            case 'Status': {
-                const stat = $('td', row).text()
-                if (stat.includes('Ongoing'))
+            case 'Statut': {
+                const stat = elem.next().find('span').text()
+                if (stat.includes('En cours'))
                     status = MangaStatus.ONGOING
-                else if (stat.includes('Completed'))
+                else if (stat.includes('Complete'))
                     status = MangaStatus.COMPLETED
                 break
-            }
-            case 'Type': {
-                const type = $('td', row).text().split('-')[0].trim()
-                let id = ''
-                if (type.includes('Manga')) id = 'manga'
-                else if (type.includes('Manhwa')) id = 'manhwa'
-                else if (type.includes('Manhua')) id = 'manhua'
-                else id = 'unknown'
-                tagSections[1].tags.push(createTag({ id: id, label: type.trim() }))
             }
         }
     }
 
-    const desc = $('.summary').html() ?? ""
+    const desc = $('h5').first().next().html() ?? ""
     return createManga({
         id: mangaId,
         titles,
@@ -83,54 +58,37 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
         tags: tagSections,
         views,
         desc,
-        //hentai
         hentai: false
     })
 }
 
 export const parseChapters = ($: CheerioStatic, mangaId: string): Chapter[] => {
     const chapters: Chapter[] = []
-    for (const elem of $('#list').children('div').toArray()) {
-        // streamNum helps me navigate the weird id/class naming scheme
-        const streamNum = /(\d+)/g.exec($(elem).attr('id') ?? "")?.[0]
-        const group = $(`.ml-1.stream-text-${streamNum}`, elem).text()
 
-        let volume = 1
-        let chapNum = 1
-        const volumes = $('.volume', elem).toArray().reverse()
-        for (const vol of volumes) {
-            const chapterElem = $('li', vol).toArray().reverse()
-            for (const chap of chapterElem) {
-                const chapId = $(chap).attr('id')?.replace('b-', 'i')
-                let name: string | undefined
-                const nameArr = ($('a', chap).html() ?? "").replace(/(\t*\n*)/g, '').split(':')
-                name = nameArr.length > 1 ? nameArr[1].trim() : undefined
+    for (const elem of $('ul.chapterszozo li').toArray()) {
+        const chapNum = $(elem).find('.chapter-title-rtlrr a').text().split(' ').pop() ?? ''
+        const name = $(elem).find('.chapter-title-rtlrr em').text() || undefined
+        const time = new Date($(elem).find('.date-chapter-title-rtl').text())
 
-                const time = convertTime($('.time', chap).text().trim())
-                chapters.push(createChapter({
-                    id: chapId ?? '',
-                    mangaId,
-                    name,
-                    chapNum,
-                    volume,
-                    time,
-                    group,
-                    langCode: LanguageCode.ENGLISH
-                }))
-                chapNum++
-            }
-            volume++
-        }
+        chapters.push(createChapter({
+            id: chapNum,
+            mangaId,
+            name,
+            chapNum: parseInt(chapNum),
+            time,
+            langCode: LanguageCode.FRENCH
+        }))
     }
 
     return chapters
 }
 
-export const parseChapterDetails = (data: any, mangaId: string, chapterId: string): ChapterDetails => {
-    const script = JSON.parse(/var _load_pages = (.*);/.exec(data)?.[1] ?? '')
+export const parseChapterDetails = ($: CheerioStatic, mangaId: string, chapterId: string): ChapterDetails => {
     const pages: string[] = []
-    for (const page of script)
-        pages.push(page.u)
+    for (const page of $('.viewer-cnt #all img').toArray()) {
+        const img = $(page)
+        pages.push(img.attr('url') ?? '')
+    }
 
     return createChapterDetails({
         id: chapterId,
@@ -222,7 +180,7 @@ export const parseHomeSections = ($: CheerioStatic, sections: HomeSection[], sec
 
     for (const section of sections) sectionCallback(section)
 }
- 
+
 export const parseViewMore = ($: CheerioStatic, homepageSectionId: string): MangaTile[] => {
     const manga: MangaTile[] = []
     if (homepageSectionId === 'popular_titles') {
