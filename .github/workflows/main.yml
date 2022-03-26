@@ -1,11 +1,6 @@
 on:
   push:
-    branches:
-      - master
-  pull_request:
-      types: [closed]
-      branches:
-          - master
+    branches: [ master ]
 
 name: Bundle and Publish Sources
 jobs:
