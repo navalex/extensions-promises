@@ -32,12 +32,6 @@ export const ScanFRInfo: SourceInfo = {
 
 export class ScanFR extends Source {
 	readonly cookies = [createCookie({ name: 'set', value: 'h=1', domain: SFR_DOMAIN })]
-	cloudflareBypassRequest() {
-		return createRequestObject({
-		  url: `${SFR_DOMAIN}`,
-		  method,
-		})
-	  }
 
 	async getMangaDetails(mangaId: string): Promise<Manga> {
 		const detailsRequest = createRequestObject({
@@ -78,12 +72,12 @@ export class ScanFR extends Source {
 		const search = generateSearch(query)
 		const request = createRequestObject({
 			url: `${SFR_DOMAIN}/search?${search}`,
-			method,
+			method: 'GET',
 			cookies: this.cookies,
 		})
 
 		const response = await this.requestManager.schedule(request, 1)
-		const manga = parseSearch(JSON.parse(response.data))
+		const manga = parseSearch(response.data)
 
 		return createPagedResults({
 			results: manga,

@@ -113,7 +113,7 @@ interface SearchItemQuery {
     data: string;
 }
 
-export const parseSearch = (data: SearchQuery): MangaTile[] => {
+export const parseSearch = (data: any): MangaTile[] => {
     const mangas: MangaTile[] = []
     for (const item of data.suggestions) {
         mangas.push(createMangaTile({
