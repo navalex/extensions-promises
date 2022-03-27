@@ -1,1 +1,1 @@
-{"buildTime":"2022-03-27T00:31:01.017Z","sources":[]}
+{"buildTime":"2022-03-27T00:57:54.963Z","sources":[{"id":"ScanFR","name":"ScanFR","author":"Alexandre Navaro","desc":"Extension that pulls manga from scan-fr.cc","website":"https://github.com/Navalex","version":"2.0.2","icon":"icon.png","tags":[{"text":"Notifications","type":"success"}],"websiteBaseURL":"https://scan-fr.cc/"}]}
