@@ -341,7 +341,7 @@ const ScanFRParser_1 = require("./ScanFRParser");
 const SFR_DOMAIN = 'https://scan-fr.cc/';
 const method = 'GET';
 exports.ScanFRInfo = {
-    version: '2.0.2',
+    version: '0.1.0',
     name: 'ScanFR',
     icon: 'icon.png',
     author: 'Alexandre Navaro',
