@@ -63,11 +63,15 @@ describe('Scan-fr.cc Tests', () => {
 
     it('Testing search', async () => {
         const testSearch: SearchRequest = {
-            title: 'one',
+            title: 'One piece',
         }
 
         const search = await wrapper.searchRequest(source, testSearch, {offset: 0})
-        const result = search.results[0]
+        const [result] = search.results
+
+        console.log('========= result =========')
+        console.log(result)
+        console.log('==========================')
 
         expect(result, 'No response from server').to.exist
 

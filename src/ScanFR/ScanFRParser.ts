@@ -104,23 +104,19 @@ export const generateSearch = (query: SearchRequest): string => {
     return `query=${encodeURI(title)}`
 }
 
-interface SearchQuery {
-    suggestions: Array<SearchItemQuery>;
-}
-
-interface SearchItemQuery {
-    value: string;
-    data: string;
-}
-
 export const parseSearch = (data: any): MangaTile[] => {
     const mangas: MangaTile[] = []
-    for (const item of data.suggestions) {
-        mangas.push(createMangaTile({
-            id: item.data,
-            image: `https://scan-fr.cc/uploads/manga/${item.data}/cover/cover_250x350.jpg`,
-            title: createIconText({ text: item.value }),
-        }))
+    const dataObject = typeof data === "object" ? data : JSON.parse(data)
+    const suggestions = dataObject['suggestions']
+
+    if (suggestions) {
+        for (const item of suggestions) {
+            mangas.push(createMangaTile({
+                id: item.data,
+                image: `https://scan-fr.cc/uploads/manga/${item.data}/cover/cover_250x350.jpg`,
+                title: createIconText({ text: item.value }),
+            }))
+        }
     }
 
     return mangas
