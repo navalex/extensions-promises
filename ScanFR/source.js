@@ -522,12 +522,16 @@ exports.generateSearch = (query) => {
 };
 exports.parseSearch = (data) => {
     const mangas = [];
-    for (const item of data.suggestions) {
-        mangas.push(createMangaTile({
-            id: item.data,
-            image: `https://scan-fr.cc/uploads/manga/${item.data}/cover/cover_250x350.jpg`,
-            title: createIconText({ text: item.value }),
-        }));
+    const dataObject = typeof data === "object" ? data : JSON.parse(data);
+    const suggestions = dataObject['suggestions'];
+    if (suggestions) {
+        for (const item of suggestions) {
+            mangas.push(createMangaTile({
+                id: item.data,
+                image: `https://scan-fr.cc/uploads/manga/${item.data}/cover/cover_250x350.jpg`,
+                title: createIconText({ text: item.value }),
+            }));
+        }
     }
     return mangas;
 };
