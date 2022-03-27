@@ -14,7 +14,7 @@ const SFR_DOMAIN = 'https://scan-fr.cc/'
 const method = 'GET'
 
 export const ScanFRInfo: SourceInfo = {
-	version: '2.0.2',
+	version: '0.1.0',
 	name: 'ScanFR',
 	icon: 'icon.png',
 	author: 'Alexandre Navaro',
