@@ -387,7 +387,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
     getChapterDetails(mangaId, chapterId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
-                url: `${SFR_DOMAIN}/manga/${mangaId}/${chapterId}`,
+                url: `${SFR_DOMAIN}/manga/${mangaId}/${chapterId}/1`,
                 method,
                 cookies: this.cookies
             });
@@ -424,7 +424,7 @@ exports.parseMangaDetails = ($, mangaId) => {
     var _a, _b, _c, _d, _e;
     const tagSections = [createTagSection({ id: '0', label: 'genres', tags: [] }),
         createTagSection({ id: '1', label: 'format', tags: [] })];
-    const image = (_a = $('img', '.img-responsive').attr('src')) !== null && _a !== void 0 ? _a : "";
+    const image = (_a = $('.boxed img').attr('src')) !== null && _a !== void 0 ? _a : "";
     const rating = $('div', '#item-rating').data('score');
     const titles = [];
     const title = $('.widget-title').first().text().replace('Manga ', '');
@@ -468,11 +468,11 @@ exports.parseMangaDetails = ($, mangaId) => {
             }
         }
     }
-    const desc = (_e = $('h5').first().next().html()) !== null && _e !== void 0 ? _e : "";
+    const desc = (_e = $('h5').first().next().text()) !== null && _e !== void 0 ? _e : "";
     return createManga({
         id: mangaId,
         titles,
-        image: image.replace(/(https:)?\/\//gi, 'https://'),
+        image: image,
         rating: Number(rating),
         status,
         artist,
@@ -506,7 +506,7 @@ exports.parseChapterDetails = ($, mangaId, chapterId) => {
     const pages = [];
     for (const page of $('.viewer-cnt #all img').toArray()) {
         const img = $(page);
-        pages.push((_a = img.attr('url')) !== null && _a !== void 0 ? _a : '');
+        pages.push((_a = img.data('src')) !== null && _a !== void 0 ? _a : '');
     }
     return createChapterDetails({
         id: chapterId,
