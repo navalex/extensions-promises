@@ -68,11 +68,6 @@ describe('Scan-fr.cc Tests', () => {
 
         const search = await wrapper.searchRequest(source, testSearch, {offset: 0})
         const [result] = search.results
-
-        console.log('========= result =========')
-        console.log(result)
-        console.log('==========================')
-
         expect(result, 'No response from server').to.exist
 
         expect(result?.id, 'No ID found for search query').to.be.not.empty

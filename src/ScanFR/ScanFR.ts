@@ -58,7 +58,7 @@ export class ScanFR extends Source {
 
 	async getChapterDetails(mangaId: string, chapterId: string): Promise<ChapterDetails> {
 		const request = createRequestObject({
-			url: `${SFR_DOMAIN}/manga/${mangaId}/${chapterId}`,
+			url: `${SFR_DOMAIN}/manga/${mangaId}/${chapterId}/1`,
 			method,
 			cookies: this.cookies
 		})

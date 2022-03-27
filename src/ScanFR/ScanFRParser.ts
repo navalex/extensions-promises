@@ -4,7 +4,7 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
     const tagSections: TagSection[] = [createTagSection({ id: '0', label: 'genres', tags: [] }),
     createTagSection({ id: '1', label: 'format', tags: [] })]
 
-    const image: string = $('img', '.img-responsive').attr('src') ?? ""
+    const image: string = $('.boxed img').attr('src') ?? ""
     const rating: string = $('div', '#item-rating').data('score')
     const titles: string[] = []
     const title = $('.widget-title').first().text().replace('Manga ', '')
@@ -46,11 +46,11 @@ export const parseMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
         }
     }
 
-    const desc = $('h5').first().next().html() ?? ""
+    const desc = $('h5').first().next().text() ?? ""
     return createManga({
         id: mangaId,
         titles,
-        image: image.replace(/(https:)?\/\//gi, 'https://'),
+        image: image,
         rating: Number(rating),
         status,
         artist,
@@ -87,7 +87,7 @@ export const parseChapterDetails = ($: CheerioStatic, mangaId: string, chapterId
     const pages: string[] = []
     for (const page of $('.viewer-cnt #all img').toArray()) {
         const img = $(page)
-        pages.push(img.attr('url') ?? '')
+        pages.push(img.data('src') ?? '')
     }
 
     return createChapterDetails({
