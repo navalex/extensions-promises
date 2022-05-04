@@ -4,11 +4,11 @@ import {
     SearchRequest,
     Source
 } from 'paperback-extensions-common'
+import { ScanFR } from '../ScanFR/ScanFR'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import {ScanFR} from "../ScanFR/ScanFR";
 
-describe('Scan-fr.cc Tests', () => {
+describe('ScanFR Tests', () => {
 
     const wrapper: APIWrapper = new APIWrapper()
     const source: Source = new ScanFR(cheerio)
@@ -20,7 +20,7 @@ describe('Scan-fr.cc Tests', () => {
      * Try to choose a manga which is updated frequently, so that the historical checking test can
      * return proper results, as it is limited to searching 30 days back due to extremely long processing times otherwise.
      */
-    const mangaId = 'one-piece'
+    const mangaId = 'solo-leveling'
 
     it('Retrieve Manga Details', async () => {
         const details = await wrapper.getMangaDetails(source, mangaId)
@@ -28,6 +28,7 @@ describe('Scan-fr.cc Tests', () => {
 
         // Validate that the fields are filled
         const data = details
+        expect(data.image, 'Missing Image').to.be.not.empty
         expect(data.status, 'Missing Status').to.exist
         expect(data.author, 'Missing Author').to.be.not.empty
         expect(data.desc, 'Missing Description').to.be.not.empty
@@ -63,16 +64,26 @@ describe('Scan-fr.cc Tests', () => {
 
     it('Testing search', async () => {
         const testSearch: SearchRequest = {
-            title: 'One piece',
+            title: 'solo',
+            parameters: {}
         }
 
         const search = await wrapper.searchRequest(source, testSearch, {offset: 0})
-        const [result] = search.results
+        const result = search.results[0]
+
         expect(result, 'No response from server').to.exist
 
         expect(result?.id, 'No ID found for search query').to.be.not.empty
         expect(result?.image, 'No image found for search').to.be.not.empty
         expect(result?.title, 'No title').to.be.not.null
         expect(result?.subtitleText, 'No subtitle text').to.be.not.null
+    })
+
+    it('Testing Home-Page aquisition', async() => {
+        const homePages = await wrapper.getHomePageSections(source)
+        expect(homePages, 'No response from server').to.exist
+        expect(homePages[0], 'No latest updates section available').to.exist
+        expect(homePages[1], 'No hot section available').to.exist
+        expect(homePages[2], 'No newest action available').to.exist
     })
 })

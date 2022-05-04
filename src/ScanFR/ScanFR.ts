@@ -3,85 +3,236 @@ import {
 	Manga,
 	Chapter,
 	ChapterDetails,
+	HomeSection,
 	SearchRequest,
+	TagSection,
 	PagedResults,
 	SourceInfo,
-	TagType }
-from "paperback-extensions-common"
-import { generateSearch, parseChapterDetails, parseChapters, parseMangaDetails, parseSearch } from "./ScanFRParser"
+	MangaUpdates,
+	TagType,
+	RequestManager,
+	ContentRating,
+	MangaTile
+} from "paperback-extensions-common"
 
-const SFR_DOMAIN = 'https://scan-fr.cc/'
+import {
+	isLastPage,
+	parseHomeSections,
+	parseScanFRChapterDetails,
+	parseScanFRChapters,
+	parseScanFRMangaDetails,
+	parseSearch,
+	parseTags,
+	UpdatedManga,
+	parseUpdatedManga
+} from "./ScanFRParser";
+
+const SCANFR_DOMAIN = "https://scan-fr.cc/";
 const method = 'GET'
+const headers = {
+	'Host': 'scan-fr.cc',
+}
 
 export const ScanFRInfo: SourceInfo = {
-	version: '0.1.0',
+	version: '1.2',
 	name: 'ScanFR',
-	icon: 'icon.png',
-	author: 'Alexandre Navaro',
-	authorWebsite: 'https://github.com/Navalex',
-	description: 'Extension that pulls manga from scan-fr.cc',
-	hentaiSource: false,
-	websiteBaseURL: SFR_DOMAIN,
+	icon: 'logo.png',
+	author: 'Navalex',
+	authorWebsite: 'https://github.com/navalex',
+	description: 'Source française Scan-FR.cc',
+	contentRating: ContentRating.MATURE,
+	websiteBaseURL: SCANFR_DOMAIN,
 	sourceTags: [
 		{
-			text: "Notifications",
+			text: "Francais",
+			type: TagType.GREY
+		},
+		{
+			text: 'Notifications',
 			type: TagType.GREEN
 		}
 	]
 }
 
 export class ScanFR extends Source {
-	readonly cookies = [createCookie({ name: 'set', value: 'h=1', domain: SFR_DOMAIN })]
+
+	requestManager: RequestManager = createRequestManager({
+		requestsPerSecond: 3
+	});
+
+
+	/////////////////////////////////
+	/////    MANGA SHARE URL    /////
+	/////////////////////////////////
+
+	getMangaShareUrl(mangaId: string): string {
+		return `${SCANFR_DOMAIN}/manga/${mangaId}`
+	}
+
+
+	///////////////////////////////
+	/////    MANGA DETAILS    /////
+	///////////////////////////////
 
 	async getMangaDetails(mangaId: string): Promise<Manga> {
-		const detailsRequest = createRequestObject({
-			url: `${SFR_DOMAIN}/manga/${mangaId}`,
-			cookies: this.cookies,
+		const request = createRequestObject({
+			url: `${SCANFR_DOMAIN}/manga/${mangaId}`,
 			method,
+			headers
 		})
 
-		const response = await this.requestManager.schedule(detailsRequest, 1)
-		const $ = this.cheerio.load(response.data)
-		return parseMangaDetails($, mangaId)
+		const response = await this.requestManager.schedule(request, 1);
+		const $ = this.cheerio.load(response.data);
+
+		return await parseScanFRMangaDetails($, mangaId);
 	}
+
+
+	//////////////////////////
+	/////    CHAPTERS    /////
+	//////////////////////////
 
 	async getChapters(mangaId: string): Promise<Chapter[]> {
 		const request = createRequestObject({
-			url: `${SFR_DOMAIN}/manga/${mangaId}`,
+			url: `${SCANFR_DOMAIN}/manga/${mangaId}`,
 			method,
+			headers
 		})
 
-		const response = await this.requestManager.schedule(request, 1)
-		const $ = this.cheerio.load(response.data)
-		return parseChapters($, mangaId)
+		const response = await this.requestManager.schedule(request, 1);
+		const $ = this.cheerio.load(response.data);
+
+		return await parseScanFRChapters($, mangaId);
 	}
+
+
+	//////////////////////////////////
+	/////    CHAPTERS DETAILS    /////
+	//////////////////////////////////
 
 	async getChapterDetails(mangaId: string, chapterId: string): Promise<ChapterDetails> {
 		const request = createRequestObject({
-			url: `${SFR_DOMAIN}/manga/${mangaId}/${chapterId}/1`,
+			url: `${chapterId}`,
 			method,
-			cookies: this.cookies
+			headers
+		})
+
+		const response = await this.requestManager.schedule(request, 1);
+		const $ = this.cheerio.load(response.data);
+
+		return await parseScanFRChapterDetails($, mangaId, chapterId);
+	}
+
+
+	////////////////////////////////
+	/////    SEARCH REQUEST    /////
+	////////////////////////////////
+
+	async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
+		const page: number = metadata?.page ?? 1
+		const search = query.title?.replace(/ /g, '+').replace(/[’'´]/g, '%27') ?? ""
+		let manga: MangaTile[] = []
+
+		if (query.includedTags && query.includedTags?.length != 0) {
+
+			const request = createRequestObject({
+				url: `${SCANFR_DOMAIN}/filterList?page=${page}&tag=${query.includedTags[0].id}&alpha=${search}&sortBy=name&asc=true`,
+				method,
+				headers
+			})
+
+			const response = await this.requestManager.schedule(request, 1)
+			const $ = this.cheerio.load(response.data)
+
+			manga = parseSearch($)
+			metadata = !isLastPage($) ? { page: page + 1 } : undefined
+		}
+		else {
+			const request = createRequestObject({
+				url: `${SCANFR_DOMAIN}/filterList?page=${page}&alpha=${search}&sortBy=name&asc=true`,
+				method,
+				headers
+			})
+
+			const response = await this.requestManager.schedule(request, 1)
+			const $ = this.cheerio.load(response.data)
+
+			manga = parseSearch($)
+			metadata = !isLastPage($) ? { page: page + 1 } : undefined
+		}
+
+		return createPagedResults({
+			results: manga,
+			metadata
+		})
+	}
+
+
+	//////////////////////////////
+	/////    HOME SECTION    /////
+	//////////////////////////////
+
+	async getHomePageSections(sectionCallback: (section: HomeSection) => void): Promise<void> {
+		const section1 = createHomeSection({ id: 'latest_popular_manga', title: 'Dernier Manga Populaire Sorti' })
+		const section2 = createHomeSection({ id: 'latest_updates', title: 'Dernier Manga Sorti' })
+		const section3 = createHomeSection({ id: 'top_manga', title: 'Top MANGA' })
+
+		const request1 = createRequestObject({
+			url: `${SCANFR_DOMAIN}`,
+			method: 'GET'
+		})
+
+		const response1 = await this.requestManager.schedule(request1, 1)
+		const $1 = this.cheerio.load(response1.data)
+
+		parseHomeSections($1, [section1, section2, section3], sectionCallback)
+	}
+
+
+	//////////////////////
+	/////    TAGS    /////
+	//////////////////////
+
+	async getSearchTags(): Promise<TagSection[]> {
+		const request = createRequestObject({
+			url: `${SCANFR_DOMAIN}/manga-list`,
+			method,
+			headers
 		})
 
 		const response = await this.requestManager.schedule(request, 1)
 		const $ = this.cheerio.load(response.data)
-		return parseChapterDetails($, mangaId, chapterId)
+
+		return parseTags($)
 	}
 
-	async searchRequest(query: SearchRequest, metadata: any): Promise<PagedResults> {
-		const search = generateSearch(query)
-		const request = createRequestObject({
-			url: `${SFR_DOMAIN}/search?${search}`,
-			method: 'GET',
-			cookies: this.cookies,
-		})
 
-		const response = await this.requestManager.schedule(request, 1)
-		const manga = parseSearch(response.data)
+	//////////////////////////////////////
+	/////    FILTER UPDATED MANGA    /////
+	//////////////////////////////////////
 
-		return createPagedResults({
-			results: manga,
-			metadata,
-		})
+	async filterUpdatedManga(mangaUpdatesFoundCallback: (updates: MangaUpdates) => void, time: Date, ids: string[]): Promise<void> {
+		let updatedManga: UpdatedManga = {
+			ids: [],
+			loadMore: true
+		}
+
+		while (updatedManga.loadMore) {
+			const request = createRequestObject({
+				url: `${SCANFR_DOMAIN}`,
+				method,
+				headers
+			})
+
+			const response = await this.requestManager.schedule(request, 1)
+			const $ = this.cheerio.load(response.data)
+
+			updatedManga = parseUpdatedManga($, time, ids)
+			if (updatedManga.ids.length > 0) {
+				mangaUpdatesFoundCallback(createMangaUpdates({
+					ids: updatedManga.ids
+				}));
+			}
+		}
 	}
 }
