@@ -396,7 +396,7 @@ const headers = {
     'Host': 'scan-fr.cc',
 };
 exports.ScanFRInfo = {
-    version: '1.2',
+    version: '1.0.2',
     name: 'ScanFR',
     icon: 'logo.png',
     author: 'Navalex',
