@@ -11,6 +11,10 @@ import {
 } from "paperback-extensions-common";
 
 
+function getMangaThumbnail(mangaID: string | undefined) {
+    return "https://scan-fr.cc/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg"
+}
+
 ///////////////////////////////
 /////    MANGA DETAILS    /////
 ///////////////////////////////
@@ -144,7 +148,7 @@ export const parseSearch = ($: CheerioStatic): MangaTile[] => {
 
     for (const item of $('.media').toArray()) {
         let url = $('h5 a', item).attr('href')?.split("/")[4]
-        let image = ($('img', item).attr('src') ?? '').split("/")[0] == "https:" ? $('img', item).attr('src') ?? "" : "https:" + $('img', item).attr('src') ?? ""
+        let image = getMangaThumbnail(url)
         let title = decodeHTMLEntity($('h5', item).text())
         let subtitle = "Chapitre " + decodeHTMLEntity($('a', item).eq(2).text().trim().replace(/#/g, ""))
 
@@ -172,7 +176,7 @@ const parseLatestManga = ($: CheerioStatic): MangaTile[] => {
 
     for (const item of $('.mangalist .manga-item').toArray()) {
         let url = $('a', item).first().attr('href')?.split("/").pop()
-        let image = "https://ScanFR.cc/uploads/manga/" + url + "/cover/cover_250x350.jpg"
+        let image = getMangaThumbnail(url)
         let title = decodeHTMLEntity($('a', item).first().text())
         let subtitle = "Chapitre " + decodeHTMLEntity(($('a', item).eq(1).text().trim().match(/(\d)+[.]?(\d)*/gm) ?? "")[0])
 
@@ -199,9 +203,9 @@ const parseLatestPopularMangaUpdated = ($: CheerioStatic): MangaTile[] => {
 
     for (const item of $('.hot-thumbnails li').toArray()) {
         let url = $('a', item).first().attr('href')?.split("/")[4]
-        let image = "https:" + $('img', item).attr('src')
-        let title = decodeHTMLEntity($('a', item).first().text())
-        let subtitle = "Chapitre " + decodeHTMLEntity($('p', item).text().split(' ').reverse()[1])
+        let image = getMangaThumbnail(url)
+        let title = decodeHTMLEntity($('.manga-name a', item).first().text())
+        let subtitle = "Chapitre " + decodeHTMLEntity($('p', item).text().trim().split(' ').reverse()[1])
 
         if (typeof url === 'undefined' || typeof image === 'undefined')
             continue
@@ -226,7 +230,7 @@ const parseTopManga = ($: CheerioStatic): MangaTile[] => {
 
     for (const item of $('.panel.panel-success').eq(0).find('ul .list-group-item').toArray()) {
         let url = $('a', item).first().attr('href')?.split("/").pop()
-        let image = "https://ScanFR.cc/uploads/manga/" + url + "/cover/cover_250x350.jpg"
+        let image = getMangaThumbnail(url)
         let title = decodeHTMLEntity($('strong', item).text())
         let subtitle = "👀 " + $('.media-body', item).text().split('\n')[2].trim().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 
