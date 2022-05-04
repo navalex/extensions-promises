@@ -576,6 +576,9 @@ exports.ScanFR = ScanFR;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseUpdatedManga = exports.isLastPage = exports.parseTags = exports.parseHomeSections = exports.parseSearch = exports.parseScanFRChapterDetails = exports.parseScanFRChapters = exports.parseScanFRMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
+function getMangaThumbnail(mangaID) {
+    return "https://scan-fr.cc/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg";
+}
 ///////////////////////////////
 /////    MANGA DETAILS    /////
 ///////////////////////////////
@@ -683,11 +686,11 @@ exports.parseScanFRChapterDetails = ($, mangaId, chapterId) => {
 /////    SEARCH    /////
 ////////////////////////
 exports.parseSearch = ($) => {
-    var _a, _b, _c, _d;
+    var _a;
     const manga = [];
     for (const item of $('.media').toArray()) {
         let url = (_a = $('h5 a', item).attr('href')) === null || _a === void 0 ? void 0 : _a.split("/")[4];
-        let image = ((_b = $('img', item).attr('src')) !== null && _b !== void 0 ? _b : '').split("/")[0] == "https:" ? (_c = $('img', item).attr('src')) !== null && _c !== void 0 ? _c : "" : (_d = "https:" + $('img', item).attr('src')) !== null && _d !== void 0 ? _d : "";
+        let image = getMangaThumbnail(url);
         let title = decodeHTMLEntity($('h5', item).text());
         let subtitle = "Chapitre " + decodeHTMLEntity($('a', item).eq(2).text().trim().replace(/#/g, ""));
         if (typeof url === 'undefined' || typeof image === 'undefined')
@@ -709,7 +712,7 @@ const parseLatestManga = ($) => {
     const latestManga = [];
     for (const item of $('.mangalist .manga-item').toArray()) {
         let url = (_a = $('a', item).first().attr('href')) === null || _a === void 0 ? void 0 : _a.split("/").pop();
-        let image = "https://ScanFR.cc/uploads/manga/" + url + "/cover/cover_250x350.jpg";
+        let image = getMangaThumbnail(url);
         let title = decodeHTMLEntity($('a', item).first().text());
         let subtitle = "Chapitre " + decodeHTMLEntity(((_b = $('a', item).eq(1).text().trim().match(/(\d)+[.]?(\d)*/gm)) !== null && _b !== void 0 ? _b : "")[0]);
         if (typeof url === 'undefined' || typeof image === 'undefined')
@@ -731,9 +734,9 @@ const parseLatestPopularMangaUpdated = ($) => {
     const popularManga = [];
     for (const item of $('.hot-thumbnails li').toArray()) {
         let url = (_a = $('a', item).first().attr('href')) === null || _a === void 0 ? void 0 : _a.split("/")[4];
-        let image = "https:" + $('img', item).attr('src');
-        let title = decodeHTMLEntity($('a', item).first().text());
-        let subtitle = "Chapitre " + decodeHTMLEntity($('p', item).text().split(' ').reverse()[1]);
+        let image = getMangaThumbnail(url);
+        let title = decodeHTMLEntity($('.manga-name a', item).first().text());
+        let subtitle = "Chapitre " + decodeHTMLEntity($('p', item).text().trim().split(' ').reverse()[1]);
         if (typeof url === 'undefined' || typeof image === 'undefined')
             continue;
         popularManga.push(createMangaTile({
@@ -753,7 +756,7 @@ const parseTopManga = ($) => {
     const topManga = [];
     for (const item of $('.panel.panel-success').eq(0).find('ul .list-group-item').toArray()) {
         let url = (_a = $('a', item).first().attr('href')) === null || _a === void 0 ? void 0 : _a.split("/").pop();
-        let image = "https://ScanFR.cc/uploads/manga/" + url + "/cover/cover_250x350.jpg";
+        let image = getMangaThumbnail(url);
         let title = decodeHTMLEntity($('strong', item).text());
         let subtitle = "👀 " + $('.media-body', item).text().split('\n')[2].trim().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         if (typeof url === 'undefined' || typeof image === 'undefined')
