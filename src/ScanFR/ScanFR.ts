@@ -34,7 +34,7 @@ const headers = {
 }
 
 export const ScanFRInfo: SourceInfo = {
-	version: '1.2',
+	version: '1.0.2',
 	name: 'ScanFR',
 	icon: 'logo.png',
 	author: 'Navalex',
