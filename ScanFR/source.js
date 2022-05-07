@@ -390,18 +390,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScanFR = exports.ScanFRInfo = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const ScanFRParser_1 = require("./ScanFRParser");
-const SCANFR_DOMAIN = "https://scan-fr.cc/";
+const SCANFR_DOMAIN = "https://scan-fr.org/";
 const method = 'GET';
 const headers = {
-    'Host': 'scan-fr.cc',
+    'Host': 'scan-fr.org',
 };
 exports.ScanFRInfo = {
-    version: '1.0.2',
+    version: '1.0.3',
     name: 'ScanFR',
     icon: 'logo.png',
     author: 'Navalex',
     authorWebsite: 'https://github.com/navalex',
-    description: 'Source française Scan-FR.cc',
+    description: 'Source française Scan-FR.org',
     contentRating: paperback_extensions_common_1.ContentRating.MATURE,
     websiteBaseURL: SCANFR_DOMAIN,
     sourceTags: [
@@ -577,7 +577,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseUpdatedManga = exports.isLastPage = exports.parseTags = exports.parseHomeSections = exports.parseSearch = exports.parseScanFRChapterDetails = exports.parseScanFRChapters = exports.parseScanFRMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 function getMangaThumbnail(mangaID) {
-    return "https://scan-fr.cc/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg";
+    return "https://scan-fr.org/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg";
 }
 ///////////////////////////////
 /////    MANGA DETAILS    /////
