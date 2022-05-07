@@ -27,19 +27,19 @@ import {
 	parseUpdatedManga
 } from "./ScanFRParser";
 
-const SCANFR_DOMAIN = "https://scan-fr.cc/";
+const SCANFR_DOMAIN = "https://scan-fr.org/";
 const method = 'GET'
 const headers = {
-	'Host': 'scan-fr.cc',
+	'Host': 'scan-fr.org',
 }
 
 export const ScanFRInfo: SourceInfo = {
-	version: '1.0.2',
+	version: '1.0.3',
 	name: 'ScanFR',
 	icon: 'logo.png',
 	author: 'Navalex',
 	authorWebsite: 'https://github.com/navalex',
-	description: 'Source française Scan-FR.cc',
+	description: 'Source française Scan-FR.org',
 	contentRating: ContentRating.MATURE,
 	websiteBaseURL: SCANFR_DOMAIN,
 	sourceTags: [
