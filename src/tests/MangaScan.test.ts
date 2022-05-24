@@ -4,14 +4,14 @@ import {
     SearchRequest,
     Source
 } from 'paperback-extensions-common'
-import { ScanFR } from '../ScanFR/ScanFR'
+import { MangaScan } from '../MangaScan/MangaScan'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
-describe('ScanFR Tests', () => {
+describe('MangaScan Tests', () => {
 
     const wrapper: APIWrapper = new APIWrapper()
-    const source: Source = new ScanFR(cheerio)
+    const source: Source = new MangaScan(cheerio)
     const expect = chai.expect
     chai.use(chaiAsPromised)
 

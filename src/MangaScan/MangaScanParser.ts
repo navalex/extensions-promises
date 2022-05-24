@@ -12,14 +12,14 @@ import {
 
 
 function getMangaThumbnail(mangaID: string | undefined) {
-    return "https://scan-fr.org/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg"
+    return "https://mangascan.cc/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg"
 }
 
 ///////////////////////////////
 /////    MANGA DETAILS    /////
 ///////////////////////////////
 
-export const parseScanFRMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
+export const parseMangaScanMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
     let titles = [decodeHTMLEntity($('.widget-title').eq(0).text().trim())]
     const image = ($('.img-responsive').attr('src') ?? "").split("/")[0] == "https:" ? $('.img-responsive').attr('src') ?? "" : "https:" + $('.img-responsive').attr('src') ?? ""
 
@@ -91,10 +91,10 @@ export const parseScanFRMangaDetails = ($: CheerioStatic, mangaId: string): Mang
 /////    CHAPTERS    /////
 //////////////////////////
 
-export const parseScanFRChapters = ($: CheerioStatic, mangaId: string): Chapter[] => {
+export const parseMangaScanChapters = ($: CheerioStatic, mangaId: string): Chapter[] => {
     const chapters: Chapter[] = []
 
-    for (let chapter of $('.chapterszozo li:not(.volume)').toArray()) {
+    for (let chapter of $('.chapters li:not(.volume)').toArray()) {
         const id = $('a', chapter).attr('href') ?? ''
         const name = "Chapitre " + decodeHTMLEntity($('a', chapter).text().split(" ").pop() ?? '')
         const chapNum = Number(id.split('/').pop())
@@ -118,7 +118,7 @@ export const parseScanFRChapters = ($: CheerioStatic, mangaId: string): Chapter[
 /////    CHAPTER DETAILS    /////
 /////////////////////////////////
 
-export const parseScanFRChapterDetails = ($: CheerioStatic, mangaId: string, chapterId: string): ChapterDetails => {
+export const parseMangaScanChapterDetails = ($: CheerioStatic, mangaId: string, chapterId: string): ChapterDetails => {
     const pages: string[] = []
 
     for (let item of $('img', '.viewer-cnt #all').toArray()) {

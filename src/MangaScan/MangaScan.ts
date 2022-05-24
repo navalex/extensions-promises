@@ -18,28 +18,28 @@ import {
 import {
 	isLastPage,
 	parseHomeSections,
-	parseScanFRChapterDetails,
-	parseScanFRChapters,
-	parseScanFRMangaDetails,
+	parseMangaScanChapterDetails,
+	parseMangaScanChapters,
+	parseMangaScanMangaDetails,
 	parseSearch,
 	parseTags,
 	UpdatedManga,
 	parseUpdatedManga
-} from "./ScanFRParser";
+} from "./MangaScanParser";
 
-const SCANFR_DOMAIN = "https://www.scan-fr.org/";
+const SCANFR_DOMAIN = "https://mangascan.cc/";
 const method = 'GET'
 const headers = {
-	'Host': 'www.scan-fr.org',
+	'Host': 'mangascan.cc',
 }
 
-export const ScanFRInfo: SourceInfo = {
-	version: '1.0.5',
-	name: 'ScanFR',
+export const MangaScanInfo: SourceInfo = {
+	version: '1.0.0',
+	name: 'MangaScan',
 	icon: 'logo.png',
 	author: 'Navalex',
 	authorWebsite: 'https://github.com/navalex',
-	description: 'Source française Scan-FR.org',
+	description: 'Source française mangascan.cc',
 	contentRating: ContentRating.MATURE,
 	websiteBaseURL: SCANFR_DOMAIN,
 	sourceTags: [
@@ -54,7 +54,7 @@ export const ScanFRInfo: SourceInfo = {
 	]
 }
 
-export class ScanFR extends Source {
+export class MangaScan extends Source {
 
 	requestManager: RequestManager = createRequestManager({
 		requestsPerSecond: 3
@@ -84,7 +84,7 @@ export class ScanFR extends Source {
 		const response = await this.requestManager.schedule(request, 5);
 		const $ = this.cheerio.load(response.data);
 
-		return await parseScanFRMangaDetails($, mangaId);
+		return await parseMangaScanMangaDetails($, mangaId);
 	}
 
 
@@ -102,7 +102,7 @@ export class ScanFR extends Source {
 		const response = await this.requestManager.schedule(request, 5);
 		const $ = this.cheerio.load(response.data);
 
-		return await parseScanFRChapters($, mangaId);
+		return await parseMangaScanChapters($, mangaId);
 	}
 
 
@@ -120,7 +120,7 @@ export class ScanFR extends Source {
 		const response = await this.requestManager.schedule(request, 5);
 		const $ = this.cheerio.load(response.data);
 
-		return await parseScanFRChapterDetails($, mangaId, chapterId);
+		return await parseMangaScanChapterDetails($, mangaId, chapterId);
 	}
 
 
