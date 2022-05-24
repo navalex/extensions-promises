@@ -12,7 +12,7 @@ import {
 
 
 function getMangaThumbnail(mangaID: string | undefined) {
-    return "https://mangascan-vf.cc/uploads/manga/" + mangaID + ".jpg"
+    return "https://scanmanga-vf.cc/uploads/manga/" + mangaID + ".jpg"
 }
 
 ///////////////////////////////
@@ -273,7 +273,7 @@ export const parseHomeSections = ($: CheerioStatic, sections: HomeSection[], sec
 export const parseTags = ($: CheerioStatic): TagSection[] => {
     const arrayTags: Tag[] = []
 
-    for (let item of $('.tag-links a').toArray()) {
+    for (let item of $('.list-category a').toArray()) {
         let id = ($(item).attr('href') ?? '').split('/').pop() ?? ''
         let label = capitalizeFirstLetter(decodeHTMLEntity($(item).text()))
 
