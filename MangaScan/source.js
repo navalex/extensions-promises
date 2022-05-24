@@ -390,13 +390,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MangaScan = exports.MangaScanInfo = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const MangaScanParser_1 = require("./MangaScanParser");
-const SCANFR_DOMAIN = "https://scanmanga-vf.cc/";
+const SCANFR_DOMAIN = "https://scanmanga-vf.cc";
 const method = 'GET';
 const headers = {
     'Host': 'scanmanga-vf.cc',
 };
 exports.MangaScanInfo = {
-    version: '1.0.1',
+    version: '1.1.0',
     name: 'MangaScan',
     icon: 'logo.png',
     author: 'Navalex',
