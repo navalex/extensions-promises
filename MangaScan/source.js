@@ -390,10 +390,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MangaScan = exports.MangaScanInfo = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const MangaScanParser_1 = require("./MangaScanParser");
-const SCANFR_DOMAIN = "https://mangascan.cc/";
+const SCANFR_DOMAIN = "https://mangascan-vf.cc/";
 const method = 'GET';
 const headers = {
-    'Host': 'mangascan.cc',
+    'Host': 'mangascan-vf.cc',
 };
 exports.MangaScanInfo = {
     version: '1.0.0',
@@ -577,7 +577,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseUpdatedManga = exports.isLastPage = exports.parseTags = exports.parseHomeSections = exports.parseSearch = exports.parseMangaScanChapterDetails = exports.parseMangaScanChapters = exports.parseMangaScanMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 function getMangaThumbnail(mangaID) {
-    return "https://mangascan.cc/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg";
+    return "https://mangascan-vf.cc/uploads/manga/" + mangaID + ".jpg";
 }
 ///////////////////////////////
 /////    MANGA DETAILS    /////
