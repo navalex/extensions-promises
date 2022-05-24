@@ -34,7 +34,7 @@ const headers = {
 }
 
 export const ScanFRInfo: SourceInfo = {
-	version: '1.0.3',
+	version: '1.0.4',
 	name: 'ScanFR',
 	icon: 'logo.png',
 	author: 'Navalex',
@@ -81,7 +81,7 @@ export class ScanFR extends Source {
 			headers
 		})
 
-		const response = await this.requestManager.schedule(request, 1);
+		const response = await this.requestManager.schedule(request, 5);
 		const $ = this.cheerio.load(response.data);
 
 		return await parseScanFRMangaDetails($, mangaId);
@@ -99,7 +99,7 @@ export class ScanFR extends Source {
 			headers
 		})
 
-		const response = await this.requestManager.schedule(request, 1);
+		const response = await this.requestManager.schedule(request, 5);
 		const $ = this.cheerio.load(response.data);
 
 		return await parseScanFRChapters($, mangaId);
@@ -117,7 +117,7 @@ export class ScanFR extends Source {
 			headers
 		})
 
-		const response = await this.requestManager.schedule(request, 1);
+		const response = await this.requestManager.schedule(request, 5);
 		const $ = this.cheerio.load(response.data);
 
 		return await parseScanFRChapterDetails($, mangaId, chapterId);
@@ -141,7 +141,7 @@ export class ScanFR extends Source {
 				headers
 			})
 
-			const response = await this.requestManager.schedule(request, 1)
+			const response = await this.requestManager.schedule(request, 5)
 			const $ = this.cheerio.load(response.data)
 
 			manga = parseSearch($)
@@ -154,7 +154,7 @@ export class ScanFR extends Source {
 				headers
 			})
 
-			const response = await this.requestManager.schedule(request, 1)
+			const response = await this.requestManager.schedule(request, 5)
 			const $ = this.cheerio.load(response.data)
 
 			manga = parseSearch($)
@@ -182,7 +182,7 @@ export class ScanFR extends Source {
 			method: 'GET'
 		})
 
-		const response1 = await this.requestManager.schedule(request1, 1)
+		const response1 = await this.requestManager.schedule(request1, 5)
 		const $1 = this.cheerio.load(response1.data)
 
 		parseHomeSections($1, [section1, section2, section3], sectionCallback)
@@ -200,7 +200,7 @@ export class ScanFR extends Source {
 			headers
 		})
 
-		const response = await this.requestManager.schedule(request, 1)
+		const response = await this.requestManager.schedule(request, 5)
 		const $ = this.cheerio.load(response.data)
 
 		return parseTags($)
@@ -224,7 +224,7 @@ export class ScanFR extends Source {
 				headers
 			})
 
-			const response = await this.requestManager.schedule(request, 1)
+			const response = await this.requestManager.schedule(request, 5)
 			const $ = this.cheerio.load(response.data)
 
 			updatedManga = parseUpdatedManga($, time, ids)
