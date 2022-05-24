@@ -396,7 +396,7 @@ const headers = {
     'Host': 'scan-fr.org',
 };
 exports.ScanFRInfo = {
-    version: '1.0.3',
+    version: '1.0.4',
     name: 'ScanFR',
     icon: 'logo.png',
     author: 'Navalex',
@@ -438,7 +438,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                 method,
                 headers
             });
-            const response = yield this.requestManager.schedule(request, 1);
+            const response = yield this.requestManager.schedule(request, 5);
             const $ = this.cheerio.load(response.data);
             return yield ScanFRParser_1.parseScanFRMangaDetails($, mangaId);
         });
@@ -453,7 +453,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                 method,
                 headers
             });
-            const response = yield this.requestManager.schedule(request, 1);
+            const response = yield this.requestManager.schedule(request, 5);
             const $ = this.cheerio.load(response.data);
             return yield ScanFRParser_1.parseScanFRChapters($, mangaId);
         });
@@ -468,7 +468,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                 method,
                 headers
             });
-            const response = yield this.requestManager.schedule(request, 1);
+            const response = yield this.requestManager.schedule(request, 5);
             const $ = this.cheerio.load(response.data);
             return yield ScanFRParser_1.parseScanFRChapterDetails($, mangaId, chapterId);
         });
@@ -488,7 +488,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                     method,
                     headers
                 });
-                const response = yield this.requestManager.schedule(request, 1);
+                const response = yield this.requestManager.schedule(request, 5);
                 const $ = this.cheerio.load(response.data);
                 manga = ScanFRParser_1.parseSearch($);
                 metadata = !ScanFRParser_1.isLastPage($) ? { page: page + 1 } : undefined;
@@ -499,7 +499,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                     method,
                     headers
                 });
-                const response = yield this.requestManager.schedule(request, 1);
+                const response = yield this.requestManager.schedule(request, 5);
                 const $ = this.cheerio.load(response.data);
                 manga = ScanFRParser_1.parseSearch($);
                 metadata = !ScanFRParser_1.isLastPage($) ? { page: page + 1 } : undefined;
@@ -522,7 +522,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                 url: `${SCANFR_DOMAIN}`,
                 method: 'GET'
             });
-            const response1 = yield this.requestManager.schedule(request1, 1);
+            const response1 = yield this.requestManager.schedule(request1, 5);
             const $1 = this.cheerio.load(response1.data);
             ScanFRParser_1.parseHomeSections($1, [section1, section2, section3], sectionCallback);
         });
@@ -537,7 +537,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                 method,
                 headers
             });
-            const response = yield this.requestManager.schedule(request, 1);
+            const response = yield this.requestManager.schedule(request, 5);
             const $ = this.cheerio.load(response.data);
             return ScanFRParser_1.parseTags($);
         });
@@ -557,7 +557,7 @@ class ScanFR extends paperback_extensions_common_1.Source {
                     method,
                     headers
                 });
-                const response = yield this.requestManager.schedule(request, 1);
+                const response = yield this.requestManager.schedule(request, 5);
                 const $ = this.cheerio.load(response.data);
                 updatedManga = ScanFRParser_1.parseUpdatedManga($, time, ids);
                 if (updatedManga.ids.length > 0) {
