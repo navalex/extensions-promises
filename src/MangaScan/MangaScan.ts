@@ -27,10 +27,10 @@ import {
 	parseUpdatedManga
 } from "./MangaScanParser";
 
-const SCANFR_DOMAIN = "https://mangascan.cc/";
+const SCANFR_DOMAIN = "https://mangascan-vf.cc/";
 const method = 'GET'
 const headers = {
-	'Host': 'mangascan.cc',
+	'Host': 'mangascan-vf.cc',
 }
 
 export const MangaScanInfo: SourceInfo = {

@@ -12,7 +12,7 @@ import {
 
 
 function getMangaThumbnail(mangaID: string | undefined) {
-    return "https://mangascan.cc/uploads/manga/" + mangaID + "/cover/cover_250x350.jpg"
+    return "https://mangascan-vf.cc/uploads/manga/" + mangaID + ".jpg"
 }
 
 ///////////////////////////////
