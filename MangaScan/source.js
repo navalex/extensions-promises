@@ -390,18 +390,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MangaScan = exports.MangaScanInfo = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const MangaScanParser_1 = require("./MangaScanParser");
-const SCANFR_DOMAIN = "https://mangascan-vf.cc/";
+const SCANFR_DOMAIN = "https://scanmanga-vf.cc/";
 const method = 'GET';
 const headers = {
-    'Host': 'mangascan-vf.cc',
+    'Host': 'scanmanga-vf.cc',
 };
 exports.MangaScanInfo = {
-    version: '1.0.0',
+    version: '1.0.1',
     name: 'MangaScan',
     icon: 'logo.png',
     author: 'Navalex',
     authorWebsite: 'https://github.com/navalex',
-    description: 'Source française mangascan.cc',
+    description: 'Source française scanmanga-vf.cc',
     contentRating: paperback_extensions_common_1.ContentRating.MATURE,
     websiteBaseURL: SCANFR_DOMAIN,
     sourceTags: [
@@ -577,7 +577,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseUpdatedManga = exports.isLastPage = exports.parseTags = exports.parseHomeSections = exports.parseSearch = exports.parseMangaScanChapterDetails = exports.parseMangaScanChapters = exports.parseMangaScanMangaDetails = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 function getMangaThumbnail(mangaID) {
-    return "https://mangascan-vf.cc/uploads/manga/" + mangaID + ".jpg";
+    return "https://scanmanga-vf.cc/uploads/manga/" + mangaID + ".jpg";
 }
 ///////////////////////////////
 /////    MANGA DETAILS    /////
@@ -791,7 +791,7 @@ exports.parseHomeSections = ($, sections, sectionCallback) => {
 exports.parseTags = ($) => {
     var _a, _b;
     const arrayTags = [];
-    for (let item of $('.tag-links a').toArray()) {
+    for (let item of $('.list-category a').toArray()) {
         let id = (_b = ((_a = $(item).attr('href')) !== null && _a !== void 0 ? _a : '').split('/').pop()) !== null && _b !== void 0 ? _b : '';
         let label = capitalizeFirstLetter(decodeHTMLEntity($(item).text()));
         arrayTags.push({ id: id, label: label });
