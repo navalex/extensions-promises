@@ -1,18 +1,18 @@
 import {
-	Source,
-	Manga,
 	Chapter,
 	ChapterDetails,
-	HomeSection,
-	SearchRequest,
-	TagSection,
-	PagedResults,
-	SourceInfo,
-	MangaUpdates,
-	TagType,
-	RequestManager,
 	ContentRating,
-	MangaTile
+	HomeSection,
+	Manga,
+	MangaTile,
+	MangaUpdates,
+	PagedResults,
+	RequestManager,
+	SearchRequest,
+	Source,
+	SourceInfo,
+	TagSection,
+	TagType
 } from "paperback-extensions-common"
 
 import {
@@ -23,8 +23,8 @@ import {
 	parseMangaScanMangaDetails,
 	parseSearch,
 	parseTags,
-	UpdatedManga,
-	parseUpdatedManga
+	parseUpdatedManga,
+	UpdatedManga
 } from "./MangaScanParser";
 
 const SCANFR_DOMAIN = "https://scanmanga-vf.cc";
@@ -50,6 +50,10 @@ export const MangaScanInfo: SourceInfo = {
 		{
 			text: 'Notifications',
 			type: TagType.GREEN
+		},
+		{
+			text: 'Cloudflare',
+			type: TagType.RED
 		}
 	]
 }
