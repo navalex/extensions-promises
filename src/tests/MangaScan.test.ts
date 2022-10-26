@@ -11,6 +11,7 @@ import chaiAsPromised from 'chai-as-promised'
 describe('MangaScan Tests', () => {
 
     const wrapper: APIWrapper = new APIWrapper()
+    // @ts-ignore
     const source: Source = new MangaScan(cheerio)
     const expect = chai.expect
     chai.use(chaiAsPromised)
