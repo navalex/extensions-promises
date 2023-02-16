@@ -19,7 +19,7 @@ function getMangaThumbnail(mangaID: string | undefined) {
 /////    MANGA DETAILS    /////
 ///////////////////////////////
 
-export const parseMangaScanMangaDetails = ($: CheerioStatic, mangaId: string): Manga => {
+export const parseMangaScanMangaDetails = ($: any, mangaId: string): Manga => {
     let titles = [decodeHTMLEntity($('.widget-title').eq(0).text().trim())]
     const image = ($('.img-responsive').attr('src') ?? "").split("/")[0] == "https:" ? $('.img-responsive').attr('src') ?? "" : "https:" + $('.img-responsive').attr('src') ?? ""
 
@@ -91,7 +91,7 @@ export const parseMangaScanMangaDetails = ($: CheerioStatic, mangaId: string): M
 /////    CHAPTERS    /////
 //////////////////////////
 
-export const parseMangaScanChapters = ($: CheerioStatic, mangaId: string): Chapter[] => {
+export const parseMangaScanChapters = ($: any, mangaId: string): Chapter[] => {
     const chapters: Chapter[] = []
 
     for (let chapter of $('.chapters li:not(.volume)').toArray()) {
@@ -118,7 +118,7 @@ export const parseMangaScanChapters = ($: CheerioStatic, mangaId: string): Chapt
 /////    CHAPTER DETAILS    /////
 /////////////////////////////////
 
-export const parseMangaScanChapterDetails = ($: CheerioStatic, mangaId: string, chapterId: string): ChapterDetails => {
+export const parseMangaScanChapterDetails = ($: any, mangaId: string, chapterId: string): ChapterDetails => {
     const pages: string[] = []
 
     for (let item of $('img', '.viewer-cnt #all').toArray()) {
@@ -143,7 +143,7 @@ export const parseMangaScanChapterDetails = ($: CheerioStatic, mangaId: string, 
 /////    SEARCH    /////
 ////////////////////////
 
-export const parseSearch = ($: CheerioStatic): MangaTile[] => {
+export const parseSearch = ($: any): MangaTile[] => {
     const manga: MangaTile[] = []
 
     for (const item of $('.media').toArray()) {
@@ -171,7 +171,7 @@ export const parseSearch = ($: CheerioStatic): MangaTile[] => {
 /////    LAST MANGAS RELEASED    /////
 //////////////////////////////////////
 
-const parseLatestManga = ($: CheerioStatic): MangaTile[] => {
+const parseLatestManga = ($: any): MangaTile[] => {
     const latestManga: MangaTile[] = []
 
     for (const item of $('.mangalist .manga-item').toArray()) {
@@ -198,7 +198,7 @@ const parseLatestManga = ($: CheerioStatic): MangaTile[] => {
 /////    LATEST POPULAR MANGAS UPDATED    /////
 ///////////////////////////////////////////////
 
-const parseLatestPopularMangaUpdated = ($: CheerioStatic): MangaTile[] => {
+const parseLatestPopularMangaUpdated = ($: any): MangaTile[] => {
     const popularManga: MangaTile[] = []
 
     for (const item of $('.hot-thumbnails li').toArray()) {
@@ -225,7 +225,7 @@ const parseLatestPopularMangaUpdated = ($: CheerioStatic): MangaTile[] => {
 /////    TOP MANGA    /////
 ///////////////////////////
 
-const parseTopManga = ($: CheerioStatic): MangaTile[] => {
+const parseTopManga = ($: any): MangaTile[] => {
     const topManga: MangaTile[] = []
 
     for (const item of $('.panel.panel-success').eq(0).find('ul .list-group-item').toArray()) {
@@ -252,7 +252,7 @@ const parseTopManga = ($: CheerioStatic): MangaTile[] => {
 /////    HOME SECTION    /////
 //////////////////////////////
 
-export const parseHomeSections = ($: CheerioStatic, sections: HomeSection[], sectionCallback: (section: HomeSection) => void): void => {
+export const parseHomeSections = ($: any, sections: HomeSection[], sectionCallback: (section: HomeSection) => void): void => {
     for (const section of sections) sectionCallback(section)
     const popularManga: MangaTile[] = parseLatestPopularMangaUpdated($)
     const latestManga: MangaTile[] = parseLatestManga($)
@@ -270,7 +270,7 @@ export const parseHomeSections = ($: CheerioStatic, sections: HomeSection[], sec
 /////    TAGS    /////
 //////////////////////
 
-export const parseTags = ($: CheerioStatic): TagSection[] => {
+export const parseTags = ($: any): TagSection[] => {
     const arrayTags: Tag[] = []
 
     for (let item of $('.list-category a').toArray()) {
@@ -288,7 +288,7 @@ export const parseTags = ($: CheerioStatic): TagSection[] => {
 /////    CHECK LAST PAGE    /////
 /////////////////////////////////
 
-export const isLastPage = ($: CheerioStatic): boolean => {
+export const isLastPage = ($: any): boolean => {
     return $('.pagination li').last().hasClass('disabled')
 }
 
@@ -302,7 +302,7 @@ export interface UpdatedManga {
     loadMore: boolean;
 }
 
-export const parseUpdatedManga = ($: CheerioStatic, time: Date, ids: string[]): UpdatedManga => {
+export const parseUpdatedManga = ($: any, time: Date, ids: string[]): UpdatedManga => {
     const manga: string[] = []
     let loadMore = true
 

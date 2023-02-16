@@ -1,18 +1,17 @@
 import {
-	Source,
-	Manga,
 	Chapter,
 	ChapterDetails,
-	HomeSection,
-	SearchRequest,
-	TagSection,
-	PagedResults,
-	SourceInfo,
-	MangaUpdates,
-	TagType,
-	RequestManager,
 	ContentRating,
-	MangaTile
+	HomeSection,
+	Manga,
+	MangaTile,
+	MangaUpdates,
+	PagedResults,
+	SearchRequest,
+	Source,
+	SourceInfo,
+	TagSection,
+	TagType
 } from "paperback-extensions-common"
 
 import {
@@ -23,8 +22,8 @@ import {
 	parseMangaScanMangaDetails,
 	parseSearch,
 	parseTags,
-	UpdatedManga,
-	parseUpdatedManga
+	parseUpdatedManga,
+	UpdatedManga
 } from "./MangaScanParser";
 
 const SCANFR_DOMAIN = "https://scanmanga-vf.ws/";
@@ -34,7 +33,7 @@ const headers = {
 }
 
 export const MangaScanInfo: SourceInfo = {
-	version: '1.1.0',
+	version: '3.0.0',
 	name: 'MangaScan',
 	icon: 'logo.png',
 	author: 'Navalex',
@@ -48,17 +47,41 @@ export const MangaScanInfo: SourceInfo = {
 			type: TagType.GREY
 		},
 		{
-			text: 'Notifications',
-			type: TagType.GREEN
+			text: 'Cloudflare',
+			type: TagType.RED
 		}
 	]
 }
 
+const userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Mobile/15E148 Safari/604.1'
+
 export class MangaScan extends Source {
 
-	requestManager: RequestManager = createRequestManager({
-		requestsPerSecond: 3
-	});
+	requestManager = createRequestManager({
+		requestsPerSecond: 3,
+		requestTimeout: 8000,
+		interceptor: {
+			// @ts-ignore
+			interceptRequest: async (request: Request): Promise<Request> => {
+
+				// @ts-ignore
+				request.headers = {
+					...(request.headers ?? {}),
+					...{
+						'user-agent': userAgent,
+						'referer': `${SCANFR_DOMAIN}`
+					}
+				}
+
+				return request
+			},
+
+			// @ts-ignore
+			interceptResponse: async (response: Response): Promise<Response> => {
+				return response
+			}
+		}
+	})
 
 
 	/////////////////////////////////
@@ -233,6 +256,24 @@ export class MangaScan extends Source {
 					ids: updatedManga.ids
 				}));
 			}
+		}
+	}
+
+	// @ts-ignore
+	async getCloudflareBypassRequest() {
+		return createRequestObject({
+			url: SCANFR_DOMAIN,
+			method: 'GET',
+			headers: {
+				'user-agent': userAgent,
+				'referer': `${SCANFR_DOMAIN}/`
+			}
+		})
+	}
+
+	CloudFlareError(status: any) {
+		if (status == 503) {
+			throw new Error('CLOUDFLARE BYPASS ERROR:\nPlease go to Settings > Sources > <The name of this source> and press Cloudflare Bypass')
 		}
 	}
 }
