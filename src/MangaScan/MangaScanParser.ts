@@ -12,7 +12,7 @@ import {
 
 
 function getMangaThumbnail(mangaID: string | undefined) {
-    return "https://scanmanga-vf.cc/uploads/manga/" + mangaID + ".jpg"
+    return "https://scanmanga-vf.ws/uploads/manga/" + mangaID + ".jpg"
 }
 
 ///////////////////////////////

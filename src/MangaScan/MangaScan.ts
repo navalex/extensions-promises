@@ -27,19 +27,19 @@ import {
 	parseUpdatedManga
 } from "./MangaScanParser";
 
-const SCANFR_DOMAIN = "https://scanmanga-vf.cc/";
+const SCANFR_DOMAIN = "https://scanmanga-vf.ws/";
 const method = 'GET'
 const headers = {
-	'Host': 'scanmanga-vf.cc',
+	'Host': 'scanmanga-vf.ws',
 }
 
 export const MangaScanInfo: SourceInfo = {
-	version: '1.0.1',
+	version: '1.1.0',
 	name: 'MangaScan',
 	icon: 'logo.png',
 	author: 'Navalex',
 	authorWebsite: 'https://github.com/navalex',
-	description: 'Source française scanmanga-vf.cc',
+	description: 'Source scanmanga-vf.ws',
 	contentRating: ContentRating.MATURE,
 	websiteBaseURL: SCANFR_DOMAIN,
 	sourceTags: [
